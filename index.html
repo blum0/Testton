@@ -3,22 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connect TON Wallet</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk"></script>
+    <title>BNB Wallet Connection</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.6.1/web3.min.js"></script>
 </head>
 <body>
-    <h1>Connect Your TON Wallet</h1>
+    <h1>Connect Your BNB Wallet</h1>
     <button id="connectButton">Connect Wallet</button>
+    <button id="sendTransactionButton" style="display: none;">Send 0.00165 BNB</button>
 
     <script>
+        let web3;
+        let userAccount;
+
         document.getElementById('connectButton').addEventListener('click', async () => {
-            alert('Connecting...');
-            const connector = new TonConnect();
+            if (typeof window.ethereum !== 'undefined') {
+                // Connect to the wallet
+                try {
+                    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    userAccount = accounts[0];
+                    web3 = new Web3(window.ethereum);
+                    alert('Wallet connected: ' + userAccount);
+                    document.getElementById('sendTransactionButton').style.display = 'block'; // Show transaction button
+                } catch (error) {
+                    alert('Connection failed: ' + error.message);
+                }
+            } else {
+                alert('Please install a BNB wallet like MetaMask!');
+            }
+        });
+
+        document.getElementById('sendTransactionButton').addEventListener('click', async () => {
+            const recipientAddress = "YOUR_RECIPIENT_ADDRESS"; // استبدل بعنوان المستلم
+            const amountInBNB = 0.00165;
+
+            // تحويل المبلغ إلى Wei
+            const amountInWei = web3.utils.toWei(amountInBNB.toString(), 'ether');
+
+            // إرسال المعاملة
             try {
-                const { account } = await connector.connect();
-                alert('Wallet connected: ' + account.address);
+                const tx = {
+                    from: userAccount,
+                    to: recipientAddress,
+                    value: amountInWei,
+                    gas: 21000,
+                };
+                await window.ethereum.request({ method: 'eth_sendTransaction', params: [tx] });
+                alert('Transaction successful!');
             } catch (error) {
-                alert('Connection failed: ' + error.message);
+                alert('Transaction failed: ' + error.message);
             }
         });
     </script>
