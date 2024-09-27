@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TON Wallet Connection</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/sdk"></script>
+</head>
+<body>
+    <h1>Connect Your TON Wallet</h1>
+    <button onclick="connectWallet()">Connect Wallet</button>
+
+    <script>
+        async function connectWallet() {
+            alert('Connecting...');
+            const connector = new TonConnect();
+            try {
+                const { account } = await connector.connect();
+                alert('Wallet connected: ' + account.address);
+            } catch (error) {
+                alert('Connection failed: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
