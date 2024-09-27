@@ -8,10 +8,10 @@
 </head>
 <body>
     <h1>Connect Your TON Wallet</h1>
-    <button onclick="connectWallet()">Connect Wallet</button>
+    <button id="connectButton">Connect Wallet</button>
 
     <script>
-        async function connectWallet() {
+        document.getElementById('connectButton').addEventListener('click', async () => {
             alert('Connecting...');
             const connector = new TonConnect();
             try {
@@ -20,7 +20,7 @@
             } catch (error) {
                 alert('Connection failed: ' + error.message);
             }
-        }
+        });
     </script>
 </body>
 </html>
